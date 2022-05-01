@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="spectacoleTableView" layoutX="68.0" layoutY="66.0" prefHeight="400.0" prefWidth="400.0">
+              <columns>
+                <TableColumn fx:id="titluSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Titlu" />
+                <TableColumn fx:id="dataSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Data" />
+                  <TableColumn fx:id="locuriDisponibileSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Locuri disponibile" />
+              </columns>
+            </TableView>
+            <TextField fx:id="titluTextField" layoutX="641.0" layoutY="136.0" prefHeight="26.0" prefWidth="210.0" />
+            <ComboBox fx:id="nrLocuriDisponibileComboBox" layoutX="641.0" layoutY="274.0" prefWidth="210.0" />
+            <Label layoutX="603.0" layoutY="139.0" text="Titlu: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="603.0" layoutY="207.0" text="Data: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="500.0" layoutY="277.0" text="Nr. locuri disponibile: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="adaugaButton" layoutX="500.0" layoutY="435.0" mnemonicParsing="false" onAction="#adaugaSpectacol" prefHeight="30.0" prefWidth="100.0" text="Adauga">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="stergeButton" layoutX="629.0" layoutY="436.0" mnemonicParsing="false" prefWidth="100.0" text="Sterge">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="modificaButton" layoutX="754.0" layoutY="436.0" mnemonicParsing="false" prefWidth="100.0" text="Modifica">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <DatePicker fx:id="dataDatePicker" editable="false" layoutX="641.0" layoutY="204.0" prefWidth="210.0" />
+            <Label fx:id="loggedInLabel" alignment="CENTER_RIGHT" layoutX="603.0" layoutY="14.0" prefHeight="18.0" prefWidth="283.0">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
+            <Button fx:id="sortSpectacoleButton" layoutX="211.0" layoutY="499.0" mnemonicParsing="false" onAction="#sortSpectacole" text="Sort spectacole">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <TextField fx:id="pretLocTextField" layoutX="643.0" layoutY="345.0" prefHeight="26.0" prefWidth="210.0" />
+            <Label layoutX="576.0" layoutY="348.0" text="Pret loc: ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

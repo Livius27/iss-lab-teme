@@ -44,6 +44,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     runtimeOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.3'
+
+    implementation 'org.hibernate:hibernate-core:5.2.10.Final'
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+    implementation 'org.javassist:javassist:3.28.0-GA'
 }
 
 test {

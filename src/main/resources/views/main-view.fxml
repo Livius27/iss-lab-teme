@@ -14,7 +14,7 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ListView layoutX="87.0" layoutY="88.0" prefHeight="161.0" prefWidth="298.0" />
+            <ListView fx:id="spectacoleListView" layoutX="87.0" layoutY="88.0" prefHeight="161.0" prefWidth="298.0" />
             <TableView layoutX="85.0" layoutY="300.0" prefHeight="200.0" prefWidth="302.0">
               <columns>
                 <TableColumn prefWidth="75.0" />

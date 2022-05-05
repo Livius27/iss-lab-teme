@@ -2,6 +2,7 @@ package main;
 
 import controller.AbstractController;
 import controller.AdminController;
+import controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,8 +13,8 @@ import model.validators.AccountValidator;
 import model.validators.SpectacolValidator;
 import repository.IAccountRepository;
 import repository.ISpectacolRepository;
-import repository.database.AccountDBRepository;
-import repository.database.SpectacolDBRepository;
+import repository.database.AccountORMRepository;
+import repository.database.SpectacolORMRepository;
 import service.AccountService;
 import service.SpectacolService;
 import service.SuperService;
@@ -29,6 +30,7 @@ public class MainApplication extends Application {
     Scene loginScene, mainScene, adminScene;
     Stage primaryStage;
     AdminController adminController;
+    MainController mainController;
 
     public static Properties setUpDBProperties() {
         Properties props = new Properties();
@@ -46,8 +48,8 @@ public class MainApplication extends Application {
 
     private void initServices() {
         Properties props = setUpDBProperties();
-        IAccountRepository accountRepo = new AccountDBRepository(props);
-        ISpectacolRepository spectacolRepo = new SpectacolDBRepository(props);
+        IAccountRepository accountRepo = new AccountORMRepository(props);
+        ISpectacolRepository spectacolRepo = new SpectacolORMRepository(props);
 
         AccountValidator accountValidator = new AccountValidator();
         SpectacolValidator spectacolValidator = new SpectacolValidator();
@@ -59,9 +61,9 @@ public class MainApplication extends Application {
     }
 
     private void initURLs() {
-        loginFXMLURL = getClass().getResource("/login-view.fxml");
-        mainFXMLURL = getClass().getResource("/main-view.fxml");
-        adminFXMLURL = getClass().getResource("/admin-view.fxml");
+        loginFXMLURL = getClass().getResource("/views/login-view.fxml");
+        mainFXMLURL = getClass().getResource("/views/main-view.fxml");
+        adminFXMLURL = getClass().getResource("/views/admin-view.fxml");
     }
 
     private Scene initScene(URL url) throws IOException {
@@ -70,6 +72,15 @@ public class MainApplication extends Application {
         AbstractController controller = loader.getController();
         controller.setService(service);
         controller.setApplication(this);
+        return new Scene(parent);
+    }
+
+    private Scene initMainScene(URL url) throws IOException {
+        FXMLLoader loader = new FXMLLoader(url);
+        Parent parent = loader.load();
+        mainController = loader.getController();
+        mainController.setService(service);
+        mainController.setApplication(this);
         return new Scene(parent);
     }
 
@@ -85,7 +96,7 @@ public class MainApplication extends Application {
     private void initScenes() throws IOException {
         loginScene = initScene(loginFXMLURL);
         adminScene = initAdminScene(adminFXMLURL);
-        mainScene = initScene(mainFXMLURL);
+        mainScene = initMainScene(mainFXMLURL);
     }
 
     @Override
@@ -96,6 +107,7 @@ public class MainApplication extends Application {
     }
 
     public void changeToMain() {
+        mainController.init();
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("RezervariLocuri");
         primaryStage.centerOnScreen();

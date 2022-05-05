@@ -5,6 +5,8 @@ import model.validators.SpectacolValidator;
 import model.validators.ValidationException;
 import repository.ISpectacolRepository;
 
+import java.util.Objects;
+
 public class SpectacolService {
     private final ISpectacolRepository spectacolRepo;
     private final SpectacolValidator spectacolValidator;
@@ -25,14 +27,27 @@ public class SpectacolService {
         return spectacolRepo.findAll();
     }
 
-    public void addNewSpectacol(String titlu, String data, int nrLocuriDisponibile, float pretLoc) throws ValidationException, ServiceException {
+    public void saveNewSpectacol(String titlu, String data, int nrLocuriDisponibile) throws ValidationException, ServiceException {
         Spectacol spectacol = new Spectacol(titlu, data, nrLocuriDisponibile);
         spectacolValidator.validate(spectacol);
-        if (pretLoc <= 0)
-            throw new ServiceException("Pretul locului trebuie sa fie un numar real, pozitiv, diferit de 0!\n");
         Spectacol saved = spectacolRepo.save(spectacol);
         if (saved == null)
             throw new ServiceException("Spectacol was not saved!\n");
+    }
+
+    public void deleteExistingSpectacol(long id) throws ServiceException {
+        Spectacol found = spectacolRepo.findOne(id);
+        if (found == null)
+            throw new ServiceException("There is no spectacol with the given id to remove!\n");
+        spectacolRepo.delete(id);
+    }
+
+    public void updateExistingSpectacol(Spectacol spectacol) throws ValidationException, ServiceException {
+        spectacolValidator.validate(spectacol);
+        Spectacol updated = spectacolRepo.update(spectacol);
+        if (updated == null || !Objects.equals(updated.getTitlu(), spectacol.getTitlu())
+                && !Objects.equals(updated.getData(), spectacol.getData()))
+            throw new ServiceException("There is no spectacol with the given id to update!\n");
     }
 
     public Iterable<Spectacol> getSortedSpectacole() {

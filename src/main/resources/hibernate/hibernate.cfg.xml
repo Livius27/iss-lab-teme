@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="dialect">org.hibernate.dialect.SQLiteDialect</property>
+        <property name="connection.driver_class">org.sqlite.JDBC</property>
+        <property name="connection.url">jdbc:sqlite:C:\Facultate\Anul II\Semestrul 2\Ingineria sistemelor soft\Laborator\ISS_RezervariLocuri\RezervariLocuri.db</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+
+        <mapping resource="hibernate/account_hbm/Account.hbm.xml"/>
+        <mapping resource="hibernate/loc_hbm/Loc.hbm.xml"/>
+        <mapping resource="hibernate/rezervare_hbm/Rezervare.hbm.xml" />
+        <mapping resource="hibernate/spectator_hbm/Spectator.hbm.xml" />
+        <mapping resource="hibernate/spectacol_hbm/Spectacol.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

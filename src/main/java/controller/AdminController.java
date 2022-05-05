@@ -65,8 +65,7 @@ public class AdminController extends AbstractController {
                 String titlu = titluTextField.getText();
                 String data = dataDatePicker.getValue().toString();
                 int nrLocuriDisponibile = Integer.parseInt(nrLocuriDisponibileComboBox.getValue());
-                float pretLoc = Float.parseFloat(pretLocTextField.getText());
-                service.saveNewSpectacol(titlu, data, nrLocuriDisponibile, pretLoc);
+                service.addNewSpectacol(titlu, data, nrLocuriDisponibile);
                 updateModelSpectacole();
                 reset();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -11,11 +11,11 @@ public class SpectacolValidator implements Validator<Spectacol> {
         int nrLocuriDisponibile = spectacol.getNrLocuriDisponibile();
 
         if (titlu == null || titlu.equals(""))
-            errors += "Introduceti titlul spectacolului!\n";
+            errors += "Please enter the title of the show!\n";
         if (data == null || data.equals(""))
-            errors += "Introduceti data spectacolului!\n";
-        if (nrLocuriDisponibile <= 0 || nrLocuriDisponibile > 16)
-            errors += "Spectacolul trebuie sa aiba minim 1 loc disponibil si maxim 16!\n";
+            errors += "Please enter the date of the show!\n";
+        if (nrLocuriDisponibile <= 0 || nrLocuriDisponibile > 60)
+            errors += "Show must have at least 1 available seat and a maximum of 60 available seats!\n";
         if (!errors.equals(""))
             throw new ValidationException(errors);
     }

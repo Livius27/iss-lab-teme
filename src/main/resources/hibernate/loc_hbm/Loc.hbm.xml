@@ -20,7 +20,12 @@
         <property name="rand" column="rand" type="int" />
         <property name="loja" column="loja" type="int" />
         <property name="pret" column="pret" type="float" />
-        <property name="stareLoc" column="stare_loc" type="string" />
+        <property name="stareLoc" column="stare_loc">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">model.StareLoc</param>
+                <param name="type">12</param>
+            </type>
+        </property>
     </class>
 
 </hibernate-mapping>

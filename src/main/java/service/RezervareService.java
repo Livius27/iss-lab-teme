@@ -14,7 +14,7 @@ public class RezervareService {
         this.rezervareValidator = rezervareValidator;
     }
 
-    public Rezervare getRezervare(long id) throws ServiceException {
+    public Rezervare getRezervare(int id) throws ServiceException {
         Rezervare found = rezervareRepo.findOne(id);
         if (found == null)
             throw new ServiceException("Rezervare not found!\n");
@@ -25,11 +25,15 @@ public class RezervareService {
         return rezervareRepo.findAll();
     }
 
-    public void saveNewRezervare(long idSpectator, long idLocRezervat, String titluSpectacol) throws ValidationException, ServiceException {
+    public void saveNewRezervare(int idSpectator, int idLocRezervat, String titluSpectacol) throws ValidationException, ServiceException {
         Rezervare rezervare = new Rezervare(idSpectator, idLocRezervat, titluSpectacol);
         rezervareValidator.validate(rezervare);
         Rezervare saved = rezervareRepo.save(rezervare);
         if (saved == null)
             throw new ServiceException("Rezervare was not saved!\n");
+    }
+
+    public Iterable<Rezervare> getAllRezervariFromSpectacol(String titluSpectacol) {
+        return rezervareRepo.getAllRezervariFromSpectacol(titluSpectacol);
     }
 }

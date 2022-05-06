@@ -5,6 +5,7 @@ import model.validators.ValidationException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SuperService {
     private final AccountService accountService;
@@ -22,7 +23,7 @@ public class SuperService {
         this.spectatorService = spectatorService;
     }
 
-    public Manager getAccountInfo(long id) throws ServiceException {
+    public Manager getAccountInfo(int id) throws ServiceException {
         return accountService.getAccount(id);
     }
 
@@ -34,15 +35,17 @@ public class SuperService {
         return accountService.login(username, password);
     }
 
-    public Loc getLocInfo(long id) throws ServiceException {
+    public Loc getLocInfo(int id) throws ServiceException {
         return locService.getLoc(id);
     }
 
-    public Iterable<Loc> getAllLocuri() {
-        return locService.getAllLocuri();
+    public List<Loc> getAllLocuri() {
+        List<Loc> locuri = new ArrayList<Loc>();
+        locService.getAllLocuri().forEach(locuri::add);
+        return locuri;
     }
 
-    public Rezervare getRezervareInfo(long id) throws ServiceException {
+    public Rezervare getRezervareInfo(int id) throws ServiceException {
         return rezervareService.getRezervare(id);
     }
 
@@ -50,11 +53,15 @@ public class SuperService {
         return rezervareService.getAllRezervari();
     }
 
-    public void addNewRezervare(long idSpectator, long idLocRezervat, String titluSpectacol) throws ValidationException, ServiceException {
+    public Iterable<Rezervare> getAllRezervariFromSpectacol(String titluSpectacol) {
+        return rezervareService.getAllRezervariFromSpectacol(titluSpectacol);
+    }
+
+    public void addNewRezervare(int idSpectator, int idLocRezervat, String titluSpectacol) throws ValidationException, ServiceException {
         rezervareService.saveNewRezervare(idSpectator, idLocRezervat, titluSpectacol);
     }
 
-    public Spectacol getSpectacolInfo(long id) throws ServiceException {
+    public Spectacol getSpectacolInfo(int id) throws ServiceException {
         return spectacolService.getSpectacol(id);
     }
 
@@ -66,7 +73,7 @@ public class SuperService {
         spectacolService.saveNewSpectacol(titlu, data, nrLocuriDisponibile);
     }
 
-    public void removeExistingSpectacol(long id) throws ServiceException {
+    public void removeExistingSpectacol(int id) throws ServiceException {
         spectacolService.deleteExistingSpectacol(id);
     }
 
@@ -80,7 +87,7 @@ public class SuperService {
         return spectacole;
     }
 
-    public Spectator getSpectatorInfo(long id) throws ServiceException {
+    public Spectator getSpectatorInfo(int id) throws ServiceException {
         return spectatorService.getSpectator(id);
     }
 
@@ -88,7 +95,7 @@ public class SuperService {
         return spectatorService.getAllSpectatori();
     }
 
-    public void addNewSpectator(String nume, String prenume, String email) throws ValidationException, ServiceException {
-        spectatorService.saveNewSpectator(nume, prenume, email);
+    public Spectator addNewSpectator(String nume, String prenume, String email) throws ValidationException, ServiceException {
+        return spectatorService.saveNewSpectator(nume, prenume, email);
     }
 }

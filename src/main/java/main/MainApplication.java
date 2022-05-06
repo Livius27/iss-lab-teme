@@ -4,25 +4,25 @@ import controller.AbstractController;
 import controller.AdminController;
 import controller.MainController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Manager;
-import model.validators.AccountValidator;
-import model.validators.SpectacolValidator;
-import repository.IAccountRepository;
-import repository.ISpectacolRepository;
-import repository.database.AccountORMRepository;
-import repository.database.SpectacolORMRepository;
-import service.AccountService;
-import service.SpectacolService;
-import service.SuperService;
+import model.validators.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import repository.*;
+import repository.database.*;
+import service.*;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 
 public class MainApplication extends Application {
     SuperService service;
@@ -31,15 +31,28 @@ public class MainApplication extends Application {
     Stage primaryStage;
     AdminController adminController;
     MainController mainController;
+    private static SessionFactory sessionFactory;
 
-    public static Properties setUpDBProperties() {
-        Properties props = new Properties();
+    private static void initialize() {
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
         try {
-            props.load(new FileReader("db.config"));
-        } catch (IOException e) {
-            System.out.println("Cannot find db.config " + e);
+            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         }
-        return props;
+        catch (Exception ex) {
+            System.err.println("Exception " + ex);
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
+    }
+
+    /**
+     * Closes the application database session
+     */
+    static void close() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 
     public static void main(String[] args) {
@@ -47,17 +60,26 @@ public class MainApplication extends Application {
     }
 
     private void initServices() {
-        Properties props = setUpDBProperties();
-        IAccountRepository accountRepo = new AccountORMRepository(props);
-        ISpectacolRepository spectacolRepo = new SpectacolORMRepository(props);
+        initialize();
+        IAccountRepository accountRepo = new AccountORMRepository(sessionFactory);
+        ILocRepository locRepo = new LocORMRepository(sessionFactory);
+        IRezervareRepository rezervareRepo = new RezervareORMRepository(sessionFactory);
+        ISpectacolRepository spectacolRepo = new SpectacolORMRepository(sessionFactory);
+        ISpectatorRepository spectatorRepo = new SpectatorORMRepository(sessionFactory);
 
         AccountValidator accountValidator = new AccountValidator();
+        LocValidator locValidator = new LocValidator();
+        RezervareValidator rezervareValidator = new RezervareValidator();
         SpectacolValidator spectacolValidator = new SpectacolValidator();
+        SpectatorValidator spectatorValidator = new SpectatorValidator();
 
         AccountService accountService = new AccountService(accountRepo, accountValidator);
+        LocService locService = new LocService(locRepo, locValidator);
+        RezervareService rezervareService = new RezervareService(rezervareRepo, rezervareValidator);
         SpectacolService spectacolService = new SpectacolService(spectacolRepo, spectacolValidator);
+        SpectatorService spectatorService = new SpectatorService(spectatorRepo, spectatorValidator);
 
-        this.service = new SuperService(accountService, spectacolService);
+        this.service = new SuperService(accountService, locService, rezervareService, spectacolService, spectatorService);
     }
 
     private void initURLs() {
@@ -129,6 +151,11 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
+        primaryStage.setOnCloseRequest(t -> {
+            close();
+            Platform.exit();
+            System.exit(0);
+        });
         changeToMain();
         primaryStage.show();
     }

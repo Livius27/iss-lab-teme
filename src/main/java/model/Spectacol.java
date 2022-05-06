@@ -3,11 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spectacol extends Entity<Long> {
+public class Spectacol extends Entity<Integer> {
     private String titlu;
     private String data;
     private int nrLocuriDisponibile;
     private List<Loc> locuri;
+
+    public Spectacol() {}
 
     public Spectacol(String titlu, String data, int nrLocuriDisponibile) {
         this.titlu = titlu;

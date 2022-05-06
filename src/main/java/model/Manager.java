@@ -1,8 +1,10 @@
 package model;
 
-public class Manager extends Entity<Long> {
+public class Manager extends Entity<Integer> {
     private String username;
     private int passwordHash;
+
+    public Manager() {}
 
     public Manager(String username, int passwordHash) {
         this.username = username;

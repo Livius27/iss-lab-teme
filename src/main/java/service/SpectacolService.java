@@ -16,7 +16,7 @@ public class SpectacolService {
         this.spectacolValidator = spectacolValidator;
     }
 
-    public Spectacol getSpectacol(long id) throws ServiceException {
+    public Spectacol getSpectacol(int id) throws ServiceException {
         Spectacol found = spectacolRepo.findOne(id);
         if (found == null)
             throw new ServiceException("Spectacol not found!\n");
@@ -35,7 +35,7 @@ public class SpectacolService {
             throw new ServiceException("Spectacol was not saved!\n");
     }
 
-    public void deleteExistingSpectacol(long id) throws ServiceException {
+    public void deleteExistingSpectacol(int id) throws ServiceException {
         Spectacol found = spectacolRepo.findOne(id);
         if (found == null)
             throw new ServiceException("There is no spectacol with the given id to remove!\n");

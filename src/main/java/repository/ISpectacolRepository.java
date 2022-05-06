@@ -2,6 +2,6 @@ package repository;
 
 import model.Spectacol;
 
-public interface ISpectacolRepository extends ICRUDRepository<Long, Spectacol> {
+public interface ISpectacolRepository extends ICRUDRepository<Integer, Spectacol> {
     Iterable<Spectacol> sortSpectacoleByNrLocuriDisponibile();
 }

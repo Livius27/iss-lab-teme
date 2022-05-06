@@ -17,7 +17,7 @@ public class LocORMRepository implements ILocRepository {
     }
 
     @Override
-    public Loc findOne(Long id) {
+    public Loc findOne(Integer id) {
         Loc loc = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -60,7 +60,7 @@ public class LocORMRepository implements ILocRepository {
     }
 
     @Override
-    public Loc delete(Long id) {
+    public Loc delete(Integer id) {
         return null;
     }
 

@@ -18,7 +18,7 @@ public class SpectacolORMRepository implements ISpectacolRepository {
     }
 
     @Override
-    public Spectacol findOne(Long id) {
+    public Spectacol findOne(Integer id) {
         Spectacol spectacol = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -73,7 +73,7 @@ public class SpectacolORMRepository implements ISpectacolRepository {
     }
 
     @Override
-    public Spectacol delete(Long id) {
+    public Spectacol delete(Integer id) {
         Spectacol deleted = findOne(id);
         String titluDeleted = deleted.getTitlu();
         List<Rezervare> rezervari;
@@ -108,6 +108,7 @@ public class SpectacolORMRepository implements ISpectacolRepository {
                 toUpdate = session.load(Spectacol.class, spectacol.getId());
                 toUpdate.setTitlu(spectacol.getTitlu());
                 toUpdate.setData(spectacol.getData());
+                toUpdate.setNrLocuriDisponibile(spectacol.getNrLocuriDisponibile());
                 session.update(toUpdate);
                 tx.commit();
             } catch (RuntimeException ex) {

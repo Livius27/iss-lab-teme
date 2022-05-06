@@ -1,29 +1,31 @@
 package model;
 
-public class Rezervare extends Entity<Long> {
-    private long idSpectator;
-    private long idLocRezervat;
+public class Rezervare extends Entity<Integer> {
+    private int idSpectator;
+    private int idLocRezervat;
     private String titluSpectacol;
 
-    public Rezervare(long idSpectator, long idLocRezervat, String titluSpectacol) {
+    public Rezervare() {}
+
+    public Rezervare(int idSpectator, int idLocRezervat, String titluSpectacol) {
         this.idSpectator = idSpectator;
         this.idLocRezervat = idLocRezervat;
         this.titluSpectacol = titluSpectacol;
     }
 
-    public long getIdSpectator() {
+    public int getIdSpectator() {
         return idSpectator;
     }
 
-    public void setIdSpectator(long idSpectator) {
+    public void setIdSpectator(int idSpectator) {
         this.idSpectator = idSpectator;
     }
 
-    public long getIdLocRezervat() {
+    public int getIdLocRezervat() {
         return idLocRezervat;
     }
 
-    public void setIdLocRezervat(long idLocRezervat) {
+    public void setIdLocRezervat(int idLocRezervat) {
         this.idLocRezervat = idLocRezervat;
     }
 

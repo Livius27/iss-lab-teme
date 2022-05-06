@@ -14,7 +14,7 @@ public class SpectatorService {
         this.spectatorValidator = spectacolValidator;
     }
 
-    public Spectator getSpectator(long id) throws ServiceException {
+    public Spectator getSpectator(int id) throws ServiceException {
         Spectator found = spectatorRepo.findOne(id);
         if (found == null)
             throw new ServiceException("Spectator not found!\n");
@@ -25,11 +25,12 @@ public class SpectatorService {
         return spectatorRepo.findAll();
     }
 
-    public void saveNewSpectator(String nume, String prenume, String email) throws ValidationException, ServiceException {
+    public Spectator saveNewSpectator(String nume, String prenume, String email) throws ValidationException, ServiceException {
         Spectator spectator = new Spectator(nume, prenume, email);
         spectatorValidator.validate(spectator);
         Spectator saved = spectatorRepo.save(spectator);
         if (saved == null)
             throw new ServiceException("Spectator was not saved!\n");
+        return saved;
     }
 }

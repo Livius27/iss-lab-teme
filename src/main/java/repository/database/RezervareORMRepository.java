@@ -17,7 +17,7 @@ public class RezervareORMRepository implements IRezervareRepository {
     }
 
     @Override
-    public Rezervare findOne(Long id) {
+    public Rezervare findOne(Integer id) {
         Rezervare rezervare = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -56,16 +56,49 @@ public class RezervareORMRepository implements IRezervareRepository {
 
     @Override
     public Rezervare save(Rezervare rezervare) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                session.persist(rezervare);
+                tx.commit();
+            } catch (RuntimeException ex) {
+                System.err.println("Error saving rezervare! " + ex);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        return rezervare;
     }
 
     @Override
-    public Rezervare delete(Long id) {
+    public Rezervare delete(Integer id) {
         return null;
     }
 
     @Override
     public Rezervare update(Rezervare rezervare) {
         return null;
+    }
+
+    @Override
+    public Iterable<Rezervare> getAllRezervariFromSpectacol(String titlu) {
+        List<Rezervare> rezervari = new ArrayList<Rezervare>();
+
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                rezervari = session.createQuery("FROM Rezervare WHERE titluSpectacol = :titluSpectacol", Rezervare.class)
+                        .setParameter("titluSpectacol", titlu)
+                        .list();
+                tx.commit();
+            } catch (RuntimeException ex) {
+                System.err.println("Error finding all rezervari from spectacol! " + ex);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        return rezervari;
     }
 }

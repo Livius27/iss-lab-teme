@@ -16,10 +16,10 @@ public class SpectatorValidator implements Validator<Spectator> {
         String email = spectator.getEmail();
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
 
-        if (nume == null || !nume.matches("^[A-Za-z]*$")) {
+        if (nume == null || nume.equals("") || !nume.matches("^[A-Za-z]*$")) {
             errors += "Last name cannot be empty and must contain only letters!\n";
         }
-        if (prenume == null || !prenume.matches("^[A-Za-z]*$")) {
+        if (prenume == null || prenume.equals("") || !prenume.matches("^[A-Za-z]*$")) {
             errors += "First name cannot be empty and must contain only letters!\n";
         }
         if (!matcher.find()) {

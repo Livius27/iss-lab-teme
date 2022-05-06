@@ -12,7 +12,6 @@ import service.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class AdminController extends AbstractController {
     Manager loggedAccount;
@@ -26,8 +25,6 @@ public class AdminController extends AbstractController {
     DatePicker dataDatePicker;
     @FXML
     ComboBox<String> nrLocuriDisponibileComboBox;
-    @FXML
-    TextField pretLocTextField;
     @FXML
     TableView<Spectacol> spectacoleTableView;
     @FXML
@@ -52,16 +49,25 @@ public class AdminController extends AbstractController {
         loggedInLabel.setText("Logged in as: " + loggedAccount.getUsername());
 
         List<String> nrLocuriDisponibileList = new ArrayList<String>();
-        for (int i = 1; i <= 16; i++)
+        for (int i = 1; i <= 60; i++)
             nrLocuriDisponibileList.add(String.valueOf(i));
         this.nrLocuriDisponibileComboBox.getItems().setAll(nrLocuriDisponibileList);
         this.nrLocuriDisponibileComboBox.getSelectionModel().select(0);
         updateModelSpectacole();
     }
 
+    public void loadSpectacolDetails() {
+        if (spectacoleTableView.getSelectionModel().getSelectedItem() != null) {
+            Spectacol spectacol = spectacoleTableView.getSelectionModel().getSelectedItem();
+            titluTextField.setText(spectacol.getTitlu());
+            dataDatePicker.getEditor().setText(spectacol.getData());
+            nrLocuriDisponibileComboBox.getSelectionModel().select(spectacol.getNrLocuriDisponibile() - 1);
+        }
+    }
+
     public void adaugaSpectacol() {
         try {
-            if (!Objects.equals(pretLocTextField.getText(), "") && dataDatePicker.getValue() != null) {
+            if (dataDatePicker.getValue() != null) {
                 String titlu = titluTextField.getText();
                 String data = dataDatePicker.getValue().toString();
                 int nrLocuriDisponibile = Integer.parseInt(nrLocuriDisponibileComboBox.getValue());
@@ -71,13 +77,13 @@ public class AdminController extends AbstractController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success!");
                 alert.setHeaderText("Operation was completed successfully!");
-                alert.setContentText("Spectacolul a fost salvat!");
+                alert.setContentText("Show was saved!");
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning!");
                 alert.setHeaderText("Operation failed!");
-                alert.setContentText("Trebuie introduse data spectacolului si pretul unui loc!");
+                alert.setContentText("Please enter the date of the show!");
                 alert.showAndWait();
             }
         } catch (ValidationException | ServiceException | NumberFormatException ex) {
@@ -97,6 +103,5 @@ public class AdminController extends AbstractController {
     public void reset() {
         titluTextField.clear();
         dataDatePicker.getEditor().clear();
-        pretLocTextField.clear();
     }
 }

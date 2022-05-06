@@ -1,13 +1,15 @@
 package model;
 
-public class Loc extends Entity<Long> {
+public class Loc extends Entity<Integer> {
     private long numar;
     private int rand;
     private int loja;
     private float pret;
     private StareLoc stareLoc;
 
-    public Loc(long numar, int rand, int loja, int pret, StareLoc stareLoc) {
+    public Loc() {}
+
+    public Loc(long numar, int rand, int loja, float pret, StareLoc stareLoc) {
         this.numar = numar;
         this.rand = rand;
         this.loja = loja;
@@ -43,7 +45,7 @@ public class Loc extends Entity<Long> {
         return pret;
     }
 
-    public void setPret(int pret) {
+    public void setPret(float pret) {
         this.pret = pret;
     }
 

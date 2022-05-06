@@ -1,9 +1,11 @@
 package model;
 
-public class Spectator extends Entity<Long> {
+public class Spectator extends Entity<Integer> {
     private String nume;
     private String prenume;
     private String email;
+
+    public Spectator() {}
 
     public Spectator(String nume, String prenume, String email) {
         this.nume = nume;

@@ -15,26 +15,26 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="spectacoleTableView" layoutX="68.0" layoutY="66.0" prefHeight="400.0" prefWidth="400.0">
+            <TableView fx:id="spectacoleTableView" layoutX="68.0" layoutY="66.0" onMouseClicked="#loadSpectacolDetails" prefHeight="400.0" prefWidth="400.0">
               <columns>
                 <TableColumn fx:id="titluSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Titlu" />
                 <TableColumn fx:id="dataSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Data" />
                   <TableColumn fx:id="locuriDisponibileSpectacolColumn" editable="false" prefWidth="133.0" resizable="false" sortable="false" text="Locuri disponibile" />
               </columns>
             </TableView>
-            <TextField fx:id="titluTextField" layoutX="641.0" layoutY="136.0" prefHeight="26.0" prefWidth="210.0" />
-            <ComboBox fx:id="nrLocuriDisponibileComboBox" layoutX="641.0" layoutY="274.0" prefWidth="210.0" />
-            <Label layoutX="603.0" layoutY="139.0" text="Titlu: ">
+            <TextField fx:id="titluTextField" layoutX="644.0" layoutY="184.0" prefHeight="26.0" prefWidth="210.0" />
+            <ComboBox fx:id="nrLocuriDisponibileComboBox" layoutX="644.0" layoutY="322.0" prefWidth="210.0" />
+            <Label layoutX="606.0" layoutY="187.0" text="Titlu: ">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="603.0" layoutY="207.0" text="Data: ">
+            <Label layoutX="606.0" layoutY="255.0" text="Data: ">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="500.0" layoutY="277.0" text="Nr. locuri disponibile: ">
+            <Label layoutX="503.0" layoutY="325.0" text="Nr. locuri disponibile: ">
                <font>
                   <Font size="14.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <DatePicker fx:id="dataDatePicker" editable="false" layoutX="641.0" layoutY="204.0" prefWidth="210.0" />
+            <DatePicker fx:id="dataDatePicker" editable="false" layoutX="644.0" layoutY="252.0" prefWidth="210.0" />
             <Label fx:id="loggedInLabel" alignment="CENTER_RIGHT" layoutX="603.0" layoutY="14.0" prefHeight="18.0" prefWidth="283.0">
                <font>
                   <Font name="System Italic" size="12.0" />
@@ -65,12 +65,6 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <TextField fx:id="pretLocTextField" layoutX="643.0" layoutY="345.0" prefHeight="26.0" prefWidth="210.0" />
-            <Label layoutX="576.0" layoutY="348.0" text="Pret loc: ">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
          </children>
       </AnchorPane>
    </center>

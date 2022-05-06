@@ -13,7 +13,7 @@ public class LocService {
         this.locValidator = locValidator;
     }
 
-    public Loc getLoc(long id) throws ServiceException {
+    public Loc getLoc(int id) throws ServiceException {
         Loc found = locRepo.findOne(id);
         if (found == null)
             throw new ServiceException("Loc not found!\n");

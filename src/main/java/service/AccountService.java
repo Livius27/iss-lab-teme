@@ -14,7 +14,7 @@ public class AccountService {
         this.accountValidator = accountValidator;
     }
 
-    public Manager getAccount(long id) throws ServiceException {
+    public Manager getAccount(int id) throws ServiceException {
         Manager found = accountRepo.findOne(id);
         if (found == null)
             throw new ServiceException("Account not found!\n");

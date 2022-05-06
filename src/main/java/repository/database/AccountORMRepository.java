@@ -17,7 +17,7 @@ public class AccountORMRepository implements IAccountRepository {
     }
 
     @Override
-    public Manager findOne(Long id) {
+    public Manager findOne(Integer id) {
         Manager account = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -60,7 +60,7 @@ public class AccountORMRepository implements IAccountRepository {
     }
 
     @Override
-    public Manager delete(Long id) {
+    public Manager delete(Integer id) {
         return null;
     }
 

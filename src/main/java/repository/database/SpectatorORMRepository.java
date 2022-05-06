@@ -17,7 +17,7 @@ public class SpectatorORMRepository implements ISpectatorRepository {
     }
 
     @Override
-    public Spectator findOne(Long id) {
+    public Spectator findOne(Integer id) {
         Spectator spectator = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -72,7 +72,7 @@ public class SpectatorORMRepository implements ISpectatorRepository {
     }
 
     @Override
-    public Spectator delete(Long id) {
+    public Spectator delete(Integer id) {
         return null;
     }
 

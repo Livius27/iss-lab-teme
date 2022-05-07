@@ -18,78 +18,97 @@ import java.util.*;
 
 public class MainController extends AbstractController {
     ObservableList<String> modelSpectacole = FXCollections.observableArrayList();
+    ObservableList<String> modelRezervari = FXCollections.observableArrayList();
     Set<Loc> seatsToBook = new HashSet<Loc>();
     String currentShowTitle;
 
     @FXML
     ListView<String> spectacoleListView;
-
+    @FXML
+    ListView<String> rezervariListView;
     @FXML
     GridPane seatsConfigurationGrid;
-
     @FXML
     TextField numeTextField, prenumeTextField, emailTextField;
 
     @FXML
     public void initialize() {
         spectacoleListView.setItems(modelSpectacole);
+        rezervariListView.setItems(modelRezervari);
     }
 
     private void updateModelSpectacole() {
         List<String> allSpectacole = new ArrayList<String>();
         service.getAllSpectacole().forEach(spectacol -> allSpectacole
-                .add(spectacol.getTitlu() + " | " + spectacol.getData() + " | " + spectacol.getNrLocuriDisponibile() + " locuri dispinibile"));
+                .add(spectacol.getTitlu() + " | " + spectacol.getData() + " | "
+                        + spectacol.getNrLocuriDisponibile() + " locuri dispinibile"));
 
         modelSpectacole.setAll(allSpectacole);
     }
 
+    private void updateModelRezervari() {
+        List<String> allRezervariFromSpectacol = new ArrayList<String>();
+
+        if (!this.currentShowTitle.equals("")) {
+            service.getAllRezervariFromSpectacol(this.currentShowTitle).forEach(rezervare -> {
+                Spectator spectator = service.getSpectatorInfo(rezervare.getIdSpectator());
+                Loc locRezervat = service.getLocInfo(rezervare.getIdLocRezervat());
+                allRezervariFromSpectacol.add(spectator.getNume() + " " + spectator.getPrenume() + " | "
+                        + "Nr. " + locRezervat.getNumar() + ", Rand: " + locRezervat.getRand() + ", Loja: " + locRezervat.getLoja());
+            });
+
+            modelRezervari.setAll(allRezervariFromSpectacol);
+        }
+    }
+
     public void generateTheatreSeatsConfigurationForShow() {
-        List<Button> seatsList = new ArrayList<Button>();
-        this.seatsToBook.clear();
-        this.currentShowTitle = "";
-        String selectedText = spectacoleListView.getSelectionModel().getSelectedItem().strip();
-        String[] splitText = selectedText.split("[|]");
-        this.currentShowTitle = splitText[0].strip();
-        String nrLocuriDisponibileText = splitText[2].replaceAll("[^0-9]", "");
-        int nrLocuriDisponibile = Integer.parseInt(nrLocuriDisponibileText);
+        if (spectacoleListView.getSelectionModel().getSelectedItem() != null) {
+            List<Button> seatsList = new ArrayList<Button>();
+            this.seatsToBook.clear();
+            this.currentShowTitle = "";
+            String selectedText = spectacoleListView.getSelectionModel().getSelectedItem().strip();
+            String[] splitText = selectedText.split("[|]");
+            this.currentShowTitle = splitText[0].strip();
+            updateModelRezervari();
 
-        service.getSpectacolByTitlu(this.currentShowTitle).getLocuri().forEach(loc -> {
-            if (loc.getStareLoc().equals(StareLoc.LIBER)) {
-                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
-                seatButton.setDisable(false);
-                seatButton.setOnAction(event -> {
-                    this.seatsToBook.add(loc);
-                    for (Button btn : seatsList) {
-                        if (btn.getText().equals(seatButton.getText()))
-                            btn.setStyle("-fx-background-color: green");
-                    }
-                });
-                seatsList.add(seatButton);
-            }
-            if (loc.getStareLoc().equals(StareLoc.REZERVAT)) {
-                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
-                seatButton.setDisable(true);
-                seatsList.add(seatButton);
-            }
-            if (loc.getStareLoc().equals(StareLoc.INDISPONIBIL)) {
-                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
-                seatButton.setDisable(true);
-                seatsList.add(seatButton);
-            }
-        });
+            service.getSpectacolByTitlu(this.currentShowTitle).getLocuri().forEach(loc -> {
+                if (loc.getStareLoc().equals(StareLoc.LIBER)) {
+                    Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                            loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                    seatButton.setDisable(false);
+                    seatButton.setOnAction(event -> {
+                        this.seatsToBook.add(loc);
+                        for (Button btn : seatsList) {
+                            if (btn.getText().equals(seatButton.getText()))
+                                btn.setStyle("-fx-background-color: green");
+                        }
+                    });
+                    seatsList.add(seatButton);
+                }
+                if (loc.getStareLoc().equals(StareLoc.REZERVAT)) {
+                    Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                            loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                    seatButton.setDisable(true);
+                    seatsList.add(seatButton);
+                }
+                if (loc.getStareLoc().equals(StareLoc.INDISPONIBIL)) {
+                    Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                            loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                    seatButton.setDisable(true);
+                    seatsList.add(seatButton);
+                }
+            });
 
-        seatsConfigurationGrid.getChildren().clear();
-        int row = 0;
-        int col = 0;
-        for (int i = 0; i < seatsList.size(); i++) {
-            seatsConfigurationGrid.add(seatsList.get(i), col, row);
-            col++;
-            if ((i + 1) % 10 == 0) {
-                row++;
-                col = 0;
+            seatsConfigurationGrid.getChildren().clear();
+            int row = 0;
+            int col = 0;
+            for (int i = 0; i < seatsList.size(); i++) {
+                seatsConfigurationGrid.add(seatsList.get(i), col, row);
+                col++;
+                if ((i + 1) % 10 == 0) {
+                    row++;
+                    col = 0;
+                }
             }
         }
     }
@@ -148,6 +167,7 @@ public class MainController extends AbstractController {
         prenumeTextField.clear();
         emailTextField.clear();
         updateModelSpectacole();
+        modelRezervari.clear();
         seatsConfigurationGrid.getChildren().clear();
         this.seatsToBook.clear();
         this.currentShowTitle = "";

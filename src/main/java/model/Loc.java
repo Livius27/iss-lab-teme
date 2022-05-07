@@ -7,7 +7,8 @@ public class Loc extends Entity<Integer> {
     private float pret;
     private StareLoc stareLoc;
 
-    public Loc() {}
+    public Loc() {
+    }
 
     public Loc(long numar, int rand, int loja, float pret, StareLoc stareLoc) {
         this.numar = numar;

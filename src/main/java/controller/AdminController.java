@@ -95,13 +95,80 @@ public class AdminController extends AbstractController {
         }
     }
 
+    public void stergeSpectacol() {
+        try {
+            if (titluTextField.getText() != null && !titluTextField.getText().equals("")) {
+                String titluForSearch = spectacoleTableView.getSelectionModel().getSelectedItem().getTitlu();
+                Spectacol spectacolToDelete = service.getSpectacolByTitlu(titluForSearch);
+                service.removeExistingSpectacol(spectacolToDelete.getId());
+                reset();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success!");
+                alert.setHeaderText("Operation was completed successfully!");
+                alert.setContentText("Show was removed!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("Operation failed!");
+                alert.setContentText("No show to delete with the given title!");
+                alert.showAndWait();
+            }
+        } catch (ValidationException | ServiceException | NumberFormatException ex) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning!");
+            alert.setHeaderText("Operation failed!");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    public void modificaSpectacol() {
+        try {
+            if (dataDatePicker.getValue() != null) {
+                String titluForSearch = spectacoleTableView.getSelectionModel().getSelectedItem().getTitlu();
+                Spectacol newSpectacol = service.getSpectacolByTitlu(titluForSearch);
+                String titlu = titluTextField.getText();
+                String data = dataDatePicker.getValue().toString();
+
+                newSpectacol.setTitlu(titlu);
+                newSpectacol.setData(data);
+                service.modifyExistingSpectacol(newSpectacol);
+                reset();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success!");
+                alert.setHeaderText("Operation was completed successfully!");
+                alert.setContentText("Show was updated!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("Operation failed!");
+                alert.setContentText("Please enter the new date for the show!");
+                alert.showAndWait();
+            }
+        } catch (ValidationException | ServiceException | NumberFormatException ex) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning!");
+            alert.setHeaderText("Operation failed!");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     public void sortSpectacole() {
         modelSpectacole.setAll(service.getAllSpectacoleSorted());
+    }
+
+    public void logout() {
+        application.changeToMain();
+        reset();
     }
 
     @Override
     public void reset() {
         titluTextField.clear();
         dataDatePicker.getEditor().clear();
+        updateModelSpectacole();
     }
 }

@@ -9,7 +9,8 @@ public class Spectacol extends Entity<Integer> {
     private int nrLocuriDisponibile;
     private List<Loc> locuri;
 
-    public Spectacol() {}
+    public Spectacol() {
+    }
 
     public Spectacol(String titlu, String data, int nrLocuriDisponibile) {
         this.titlu = titlu;

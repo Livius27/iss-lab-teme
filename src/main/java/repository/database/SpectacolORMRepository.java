@@ -2,6 +2,7 @@ package repository.database;
 
 import model.Rezervare;
 import model.Spectacol;
+import model.Spectator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -86,6 +87,12 @@ public class SpectacolORMRepository implements ISpectacolRepository {
                 rezervari = session.createQuery("FROM Rezervare WHERE titluSpectacol = :titluSpectacol", Rezervare.class)
                         .setParameter("titluSpectacol", titluDeleted)
                         .list();
+                rezervari.forEach(rezervare -> {
+                    List<Spectator> spectatori = session.createQuery("FROM Spectator WHERE id = :id", Spectator.class)
+                            .setParameter("id", rezervare.getIdSpectator())
+                            .list();
+                    spectatori.forEach(session::remove);
+                });
                 rezervari.forEach(session::remove);
                 tx.commit();
             } catch (RuntimeException ex) {
@@ -100,12 +107,22 @@ public class SpectacolORMRepository implements ISpectacolRepository {
     @Override
     public Spectacol update(Spectacol spectacol) {
         Spectacol toUpdate = null;
+        List<Rezervare> rezervari;
 
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
                 toUpdate = session.load(Spectacol.class, spectacol.getId());
+
+                rezervari = session.createQuery("FROM Rezervare WHERE titluSpectacol = :titluSpectacol", Rezervare.class)
+                        .setParameter("titluSpectacol", toUpdate.getTitlu())
+                        .list();
+                rezervari.forEach(rezervare -> {
+                    Rezervare rezervareDB = session.load(Rezervare.class, rezervare.getId());
+                    rezervareDB.setTitluSpectacol(spectacol.getTitlu());
+                    session.update(rezervareDB);
+                });
                 toUpdate.setTitlu(spectacol.getTitlu());
                 toUpdate.setData(spectacol.getData());
                 toUpdate.setNrLocuriDisponibile(spectacol.getNrLocuriDisponibile());
@@ -138,5 +155,26 @@ public class SpectacolORMRepository implements ISpectacolRepository {
             }
         }
         return spectacole;
+    }
+
+    @Override
+    public Spectacol getSpectacolByTitlu(String titluSpectacol) {
+        Spectacol spectacol = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                spectacol = session.createQuery("FROM Spectacol WHERE titlu = :titlu", Spectacol.class)
+                        .setParameter("titlu", titluSpectacol)
+                        .uniqueResult();
+                tx.commit();
+            } catch (RuntimeException ex) {
+                System.err.println("Error getting spectacol by titlu! " + ex);
+                if (tx != null)
+                    tx.rollback();
+            }
+        }
+        return spectacol;
     }
 }

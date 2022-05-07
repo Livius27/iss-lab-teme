@@ -5,7 +5,8 @@ public class Rezervare extends Entity<Integer> {
     private int idLocRezervat;
     private String titluSpectacol;
 
-    public Rezervare() {}
+    public Rezervare() {
+    }
 
     public Rezervare(int idSpectator, int idLocRezervat, String titluSpectacol) {
         this.idSpectator = idSpectator;

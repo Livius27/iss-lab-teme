@@ -6,6 +6,7 @@ import model.validators.ValidationException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SuperService {
     private final AccountService accountService;
@@ -62,11 +63,56 @@ public class SuperService {
     }
 
     public Spectacol getSpectacolInfo(int id) throws ServiceException {
-        return spectacolService.getSpectacol(id);
+        Spectacol spectacol = spectacolService.getSpectacol(id);
+
+        List<Loc> allLocuri = new ArrayList<Loc>();
+        locService.getAllLocuri().forEach(allLocuri::add);
+        AtomicInteger locuriNeutilizabile = new AtomicInteger(allLocuri.size() - spectacol.getNrLocuriDisponibile());
+
+        spectacol.setLocuri(allLocuri);
+        rezervareService.getAllRezervariFromSpectacol(spectacol.getTitlu()).forEach(rezervare ->
+                spectacol.getLocuri().forEach(loc -> {
+                    if (rezervare.getIdLocRezervat() == loc.getId()) {
+                        loc.setStareLoc(StareLoc.REZERVAT);
+                        locuriNeutilizabile.getAndDecrement();
+                    }
+                }));
+        for (int i = allLocuri.size() - 1; i >= 0; i--) {
+            if (locuriNeutilizabile.get() > 0) {
+                spectacol.getLocuri().get(i).setStareLoc(StareLoc.INDISPONIBIL);
+                locuriNeutilizabile.getAndDecrement();
+            } else
+                break;
+        }
+        return spectacol;
     }
 
     public Iterable<Spectacol> getAllSpectacole() {
-        return spectacolService.getAllSpectacole();
+        Iterable<Spectacol> allSpectacole = spectacolService.getAllSpectacole();
+
+        for (Spectacol spectacol : allSpectacole) {
+            List<Loc> allLocuri = new ArrayList<Loc>();
+            locService.getAllLocuri().forEach(allLocuri::add);
+            AtomicInteger locuriNeutilizabile = new AtomicInteger(allLocuri.size() - spectacol.getNrLocuriDisponibile());
+
+            spectacol.setLocuri(allLocuri);
+            rezervareService.getAllRezervariFromSpectacol(spectacol.getTitlu()).forEach(rezervare ->
+                    spectacol.getLocuri().forEach(loc -> {
+                        if (rezervare.getIdLocRezervat() == loc.getId()) {
+                            loc.setStareLoc(StareLoc.REZERVAT);
+                            locuriNeutilizabile.getAndDecrement();
+                        }
+                    }));
+            for (int i = allLocuri.size() - 1; i >= 0; i--) {
+                if (locuriNeutilizabile.get() > 0) {
+                    spectacol.getLocuri().get(i).setStareLoc(StareLoc.INDISPONIBIL);
+                    locuriNeutilizabile.getAndDecrement();
+                } else
+                    break;
+            }
+
+        }
+        return allSpectacole;
     }
 
     public void addNewSpectacol(String titlu, String data, int nrLocuriDisponibile) throws ValidationException, ServiceException {
@@ -85,6 +131,31 @@ public class SuperService {
         Collection<Spectacol> spectacole = new ArrayList<Spectacol>();
         spectacolService.getSortedSpectacole().forEach(spectacole::add);
         return spectacole;
+    }
+
+    public Spectacol getSpectacolByTitlu(String titlu) {
+        Spectacol spectacol = spectacolService.getSpectacolByTitlu(titlu);
+
+        List<Loc> allLocuri = new ArrayList<Loc>();
+        locService.getAllLocuri().forEach(allLocuri::add);
+        AtomicInteger locuriNeutilizabile = new AtomicInteger(allLocuri.size() - spectacol.getNrLocuriDisponibile());
+
+        spectacol.setLocuri(allLocuri);
+        rezervareService.getAllRezervariFromSpectacol(spectacol.getTitlu()).forEach(rezervare ->
+                spectacol.getLocuri().forEach(loc -> {
+                    if (rezervare.getIdLocRezervat() == loc.getId()) {
+                        loc.setStareLoc(StareLoc.REZERVAT);
+                        locuriNeutilizabile.getAndDecrement();
+                    }
+                }));
+        for (int i = allLocuri.size() - 1; i >= 0; i--) {
+            if (locuriNeutilizabile.get() > 0) {
+                spectacol.getLocuri().get(i).setStareLoc(StareLoc.INDISPONIBIL);
+                locuriNeutilizabile.getAndDecrement();
+            } else
+                break;
+        }
+        return spectacol;
     }
 
     public Spectator getSpectatorInfo(int id) throws ServiceException {

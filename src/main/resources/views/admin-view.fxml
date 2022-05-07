@@ -44,12 +44,12 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="stergeButton" layoutX="629.0" layoutY="436.0" mnemonicParsing="false" prefWidth="100.0" text="Sterge">
+            <Button fx:id="stergeButton" layoutX="629.0" layoutY="436.0" mnemonicParsing="false" onAction="#stergeSpectacol" prefWidth="100.0" text="Sterge">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="modificaButton" layoutX="754.0" layoutY="436.0" mnemonicParsing="false" prefWidth="100.0" text="Modifica">
+            <Button fx:id="modificaButton" layoutX="754.0" layoutY="436.0" mnemonicParsing="false" onAction="#modificaSpectacol" prefWidth="100.0" text="Modifica">
                <font>
                   <Font size="14.0" />
                </font>
@@ -61,6 +61,11 @@
                </font>
             </Label>
             <Button fx:id="sortSpectacoleButton" layoutX="211.0" layoutY="499.0" mnemonicParsing="false" onAction="#sortSpectacole" text="Sort spectacole">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="logoutButton" layoutX="754.0" layoutY="556.0" mnemonicParsing="false" onAction="#logout" prefWidth="100.0" text="Logout">
                <font>
                   <Font size="14.0" />
                </font>

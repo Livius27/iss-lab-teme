@@ -5,12 +5,10 @@ import controller.AdminController;
 import controller.MainController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Manager;
 import model.validators.*;
 import org.hibernate.SessionFactory;
@@ -39,16 +37,12 @@ public class MainApplication extends Application {
                 .build();
         try {
             sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.err.println("Exception " + ex);
             StandardServiceRegistryBuilder.destroy(registry);
         }
     }
 
-    /**
-     * Closes the application database session
-     */
     static void close() {
         if (sessionFactory != null) {
             sessionFactory.close();

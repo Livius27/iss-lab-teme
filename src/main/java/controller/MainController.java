@@ -9,7 +9,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import model.Loc;
-import model.Rezervare;
 import model.Spectator;
 import model.StareLoc;
 import model.validators.ValidationException;
@@ -48,61 +47,44 @@ public class MainController extends AbstractController {
         List<Button> seatsList = new ArrayList<Button>();
         this.seatsToBook.clear();
         this.currentShowTitle = "";
-        Button seatButton;
         String selectedText = spectacoleListView.getSelectionModel().getSelectedItem().strip();
         String[] splitText = selectedText.split("[|]");
         this.currentShowTitle = splitText[0].strip();
         String nrLocuriDisponibileText = splitText[2].replaceAll("[^0-9]", "");
         int nrLocuriDisponibile = Integer.parseInt(nrLocuriDisponibileText);
 
-        int placedAvailableSeats = 0;
-        int i = 0;
-        List<Loc> locuri = service.getAllLocuri();
-        while (i < locuri.size()) {
-            boolean addedBookedSeat = false;
-            Loc loc = locuri.get(i);
-            for (Rezervare rezervare : service.getAllRezervariFromSpectacol(this.currentShowTitle)) {
-                if (rezervare.getIdLocRezervat() == loc.getId()) {
-                    seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                            loc.getPret() + " RON" + " | " + StareLoc.REZERVAT);
-                    seatButton.setDisable(true);
-                    seatsList.add(seatButton);
-                    i++;
-                    addedBookedSeat = true;
-                }
+        service.getSpectacolByTitlu(this.currentShowTitle).getLocuri().forEach(loc -> {
+            if (loc.getStareLoc().equals(StareLoc.LIBER)) {
+                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                seatButton.setDisable(false);
+                seatButton.setOnAction(event -> {
+                    this.seatsToBook.add(loc);
+                    for (Button btn : seatsList) {
+                        if (btn.getText().equals(seatButton.getText()))
+                            btn.setStyle("-fx-background-color: green");
+                    }
+                });
+                seatsList.add(seatButton);
             }
-            if (!addedBookedSeat) {
-                loc = locuri.get(i);
-                if (placedAvailableSeats < nrLocuriDisponibile) {
-                    seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                            loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
-                    seatButton.setDisable(false);
-
-                    Button finalSeatButton = seatButton;
-                    Loc finalLoc = loc;
-                    seatButton.setOnAction(event -> {
-                        this.seatsToBook.add(finalLoc);
-                        for (Button btn : seatsList) {
-                            if (btn.getText().equals(finalSeatButton.getText()))
-                                btn.setStyle("-fx-background-color: green");
-                        }
-                    });
-                    seatsList.add(seatButton);
-                    placedAvailableSeats++;
-                } else {
-                    seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
-                            loc.getPret() + " RON" + " | " + StareLoc.INDISPONIBIL);
-                    seatButton.setDisable(true);
-                    seatsList.add(seatButton);
-                }
-                i++;
+            if (loc.getStareLoc().equals(StareLoc.REZERVAT)) {
+                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                seatButton.setDisable(true);
+                seatsList.add(seatButton);
             }
-        }
+            if (loc.getStareLoc().equals(StareLoc.INDISPONIBIL)) {
+                Button seatButton = new Button("Nr. " + loc.getNumar() + "|Rand: " + loc.getRand() + "|Loja: " + loc.getLoja() + "\n" +
+                        loc.getPret() + " RON" + " | " + loc.getStareLoc().toString());
+                seatButton.setDisable(true);
+                seatsList.add(seatButton);
+            }
+        });
 
         seatsConfigurationGrid.getChildren().clear();
         int row = 0;
         int col = 0;
-        for (i = 0; i < seatsList.size(); i++) {
+        for (int i = 0; i < seatsList.size(); i++) {
             seatsConfigurationGrid.add(seatsList.get(i), col, row);
             col++;
             if ((i + 1) % 10 == 0) {
@@ -157,6 +139,7 @@ public class MainController extends AbstractController {
 
     public void openLoginWindow() {
         this.application.changeToLogin();
+        reset();
     }
 
     @Override

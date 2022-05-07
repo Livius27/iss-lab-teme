@@ -53,4 +53,8 @@ public class SpectacolService {
     public Iterable<Spectacol> getSortedSpectacole() {
         return spectacolRepo.sortSpectacoleByNrLocuriDisponibile();
     }
+
+    public Spectacol getSpectacolByTitlu(String titlu) {
+        return spectacolRepo.getSpectacolByTitlu(titlu);
+    }
 }

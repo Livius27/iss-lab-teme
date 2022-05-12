@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import model.validators.ValidationException;
 import service.ServiceException;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class MainController extends AbstractController {
     ObservableList<String> modelSpectacole = FXCollections.observableArrayList();
@@ -154,6 +156,15 @@ public class MainController extends AbstractController {
     public void init() {
         updateModelSpectacole();
         seatsConfigurationGrid.getChildren().clear();
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    reset();
+                });
+            }
+        }, 25000, 25000);
     }
 
     public void openLoginWindow() {
